@@ -36,7 +36,7 @@ We propose **DZ-TDPO**, a non-destructive alignment framework that synergizes:
 
 ## 🌟 Key Results
 
-### 1. SOTA Performance on Mutable State Tracking
+### 1. SOTA Performance on Mule State Tracking
 DZ-TDPO significantly outperforms Standard DPO and SimPO on the MSC dataset, solving the "State Inertia" problem without destroying the model's general capabilities.
 
 <div align="center">
@@ -83,13 +83,13 @@ pip install -r requirements.txt
 ## Training
 ```python
 # Example command for training on MSC
-python train_tab_tdpo.py --model_name_or_path Microsoft/Phi-3.5-mini-instruct --output_dir ./checkpoints
+python train_dz_tdpo.py --model_name_or_path Microsoft/Phi-3.5-mini-instruct --output_dir ./checkpoints
 ```
 
 ## 📜 Citation
 If you find this work helpful, please consider citing:
 ```latex
-@misc{liao2025tabtdpo,
+@misc{liao2025dztdpo,
       title={DZ-TDPO: Non-Destructive Temporal Alignment for Mutable State Tracking in Long-Context Dialogue}, 
       author={Yijun Liao},
       year={2025},
