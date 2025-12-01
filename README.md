@@ -1,4 +1,4 @@
-# TAB-TDPO
+
 <div align="center">
 
 # TAB-TDPO: Non-Destructive Temporal Alignment for Mutable State Tracking in Long-Context Dialogue
