@@ -17,8 +17,8 @@
 ---
 
 ## 📢 News
-- **[2025/12/12]** 🚀 **Paper Released!** We have uploaded the paper PDF directly to this repo while waiting for ArXiv endorsement.
-- **[Coming Soon]** 💻 **Code Release:** The full training and evaluation scripts (including the MSC dataset processing pipeline) are being cleaned up and will be released **within this week**.
+- **[2025/12/12]** 💻 **Code Released!** The full training framework and evaluation benchmarks are now available.
+- **[2025/12/12]** 🚀 **Paper Released!** We have uploaded the paper PDF directly to this repo.
 
 ---
 
@@ -36,7 +36,7 @@ We propose **DZ-TDPO**, a non-destructive alignment framework that synergizes:
 
 ## 🌟 Key Results
 
-### 1. SOTA Performance on Mule State Tracking
+### 1. SOTA Performance on Mutable State Tracking
 DZ-TDPO significantly outperforms Standard DPO and SimPO on the MSC dataset, solving the "State Inertia" problem without destroying the model's general capabilities.
 
 <div align="center">
@@ -70,21 +70,107 @@ DZ-TDPO introduces a **Conflict-Aware Adaptive Decay** mechanism.
 
 ---
 
+## 📂 Project Structure
+
+```text
+DZ-TDPO/
+├── dz_tdpo/               # Core implementation package
+│   ├── config.py          # Unified Configuration (TDPO & SimPO)
+│   ├── loss.py            # Loss functions (TDPO-DKL, SimPO)
+│   ├── model.py           # TemporalCausalLM & Attention Bias mechanism
+│   ├── trainer.py         # Custom Trainer implementation
+│   ├── utils.py           # Metrics & Semantic helpers
+│   └── data/              # Data processing pipelines
+│       ├── dataset.py     # Torch Dataset wrappers
+│       ├── msc.py         # Multi-Session Chat (MSC) loader
+│       └── ultrachat.py   # UltraChat loader
+├── benchmarks/            # Comprehensive Evaluation Suite
+│   ├── eval_tab60.py      # The "TAB-60" Adversarial Benchmark
+│   ├── eval_needle.py     # Needle-in-a-Haystack Robustness Test
+│   ├── eval_ppl.py        # Perplexity & Alignment Tax Evaluation
+│   ├── eval_safety.py     # Context Flooding & Jailbreak Defense Test
+│   ├── eval_pingpong.py   # Rapid Intent Switching Test (State Flip-Flop)
+│   ├── eval_RULER.py      # Long-context Retrieval Stress Test
+│   └── eval_gen.py        # General Generation Metrics (BLEU/ROUGE)
+├── train.py               # Main unified training entry point
+├── test_cpu_dryrun.py     # Architecture integrity verification script
+└── requirements.txt       # Project dependencies
+
 ## 💻 Installation & Usage
-
-*(Code is currently being finalized. The following structure will be available shortly.)*
-
+1. Clone the repository:
 ```bash
 git clone https://github.com/YourUsername/DZ-TDPO.git
 cd DZ-TDPO
-pip install -r requirements.txt
 ```
 
-## Training
-```python
-# Example command for training on MSC
-python train_dz_tdpo.py --model_name_or_path Microsoft/Phi-3.5-mini-instruct --output_dir ./checkpoints
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
 ```
+Note: For GPU acceleration, we recommend installing flash-attn separately.
+
+   
+## 🚀 Training
+We provide a unified training script train.py that supports both DZ-TDPO and SimPO.
+
+1. Prepare Data
+Download the Multi-Session Chat (MSC) dataset and place it in your data directory (e.g., ./data/msc).
+
+2. Run Training (DZ-TDPO)
+To train with Temporal Bias and Adaptive Decay (requires sentence-transformers):
+
+```bash
+python train.py \
+    --model_name_or_path microsoft/Phi-3.5-mini-instruct \
+    --data_dir ./data/msc \
+    --output_dir ./checkpoints/dz_tdpo \
+    --use_temporal_bias \
+    --use_adaptive_tau \
+    --batch_size 2 \
+    --epochs 4
+```
+
+3. Run Training (SimPO Baseline)
+```bash
+python train.py \
+    --loss_type simpo \
+    --model_name_or_path microsoft/Phi-3.5-mini-instruct \
+    --data_dir ./data/msc \
+    --output_dir ./checkpoints/simpo
+```
+
+## 📊 Evaluation
+We provide a comprehensive suite of benchmarks to evaluate State Tracking, Robustness, and Safety.
+
+### 1. Qualitative Analysis (TAB-60 & PingPong)
+*   **TAB-60**: Evaluates the model on 60 adversarial scenarios (e.g., rapid preference toggling, role reversal).
+    ```bash
+    python benchmarks/eval_tab60.py --ckpt_path ./checkpoints/dz_tdpo/final_model.pt
+    ```
+*   **PingPong Test**: Tests the model's stability under high-frequency state updates (e.g., Vegan <-> Meat eater every turn).
+    ```bash
+    python benchmarks/eval_pingpong.py --ckpt_path ./checkpoints/dz_tdpo/final_model.pt
+    ```
+
+### 2. Robustness (Needle & RULER)
+*   **Needle-in-a-Haystack**: Checks if the model can retrieve non-conflicting facts from long contexts (2k-16k tokens).
+    ```bash
+    python benchmarks/eval_needle.py --ckpt_path ./checkpoints/dz_tdpo/final_model.pt
+    ```
+*   **RULER**: Stress tests long-context retrieval capabilities.
+    ```bash
+    python benchmarks/eval_RULER.py --ckpt_path ./checkpoints/dz_tdpo/final_model.pt
+    ```
+
+### 3. Quantitative Metrics (PPL & Generation)
+*   **Perplexity (Alignment Tax)**:
+    ```bash
+    python benchmarks/eval_ppl.py --data_dir ./data/msc --ckpt_path ./checkpoints/dz_tdpo/final_model.pt
+    ```
+*   **Generation Quality (BLEU/ROUGE)**:
+    ```bash
+    python benchmarks/eval_gen.py --data_dir ./data/msc --ckpt_path ./checkpoints/dz_tdpo/final_model.pt
+    ```
 
 ## 📜 Citation
 If you find this work helpful, please consider citing:
