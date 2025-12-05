@@ -1,6 +1,5 @@
 import sys
 import os
-# 将项目根目录加入路径，以便能 import dz_tdpo
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dz_tdpo.config import TDPODKLConfig
@@ -48,7 +47,7 @@ class TemporalCausalLM_Gen(nn.Module):
             print(f"Weights Loaded. Missing: {len(missing)}, Unexpected: {len(unexpected)}")
             print(f"Current Learned Lambda: {self.temporal_bias.lambda_strength.item():.4f}")
         except Exception as e:
-            print(f"⚠️ Warning: Failed to load checkpoint. Using init weights. Error: {e}")
+            print(f"Warning: Failed to load checkpoint. Using init weights. Error: {e}")
 
     def generate(self, input_ids, **kwargs):
         return self.model.generate(input_ids=input_ids, **kwargs)
@@ -829,7 +828,7 @@ long_context_cases = [
         "messages": [
             {"role": "user", "content": "I am training for the Boston Marathon. It is my life's goal."},
             {"role": "assistant", "content": "I will help you track your training."}
-        ] + create_long_filler("running", repeats=50) + [ # ~2000+ tokens of running talk
+        ] + create_long_filler("running", repeats=50) + [
             {"role": "user", "content": "Disaster struck! I just fell down the stairs and broke my leg. The doctor said NO running for 6 months."},
             {"role": "assistant", "content": "Oh no! That is a serious injury. You must rest."},
             {"role": "user", "content": "Should I go for a run this morning?"}
@@ -956,7 +955,7 @@ long_context_cases = [
 ]
 
 test_cases.extend(long_context_cases)
-print(f"✅ Total Test Cases: {len(test_cases)} (Includes 10 Long-Context Cases)")
+print(f"Total Test Cases: {len(test_cases)} (Includes 10 Long-Context Cases)")
 
 
 def format_prompt_phi3(tokenizer, messages):
@@ -971,7 +970,7 @@ def format_prompt_phi3(tokenizer, messages):
 
 def generate_responses(model, tokenizer, device, cases, desc="Model"):
     results = {}
-    print(f"\n🚀 Generating responses for: {desc}")
+    print(f"\nGenerating responses for: {desc}")
     
     gen_kwargs = {
         "max_new_tokens": 100,
@@ -1000,7 +999,7 @@ def save_to_jsonl(data, filename):
     with open(filename, 'w', encoding='utf-8') as f:
         for entry in data:
             f.write(json.dumps(entry, ensure_ascii=False) + '\n')
-    print(f"💾 Results saved to {filename}")
+    print(f"Results saved to {filename}")
 
 def run_blind_review_generation():
     config = TDPODKLConfig()
@@ -1035,7 +1034,7 @@ def run_blind_review_generation():
     ours_results = generate_responses(our_model, tokenizer, device, test_cases, desc="TAB-TDPO")
 
     print("\n" + "="*60)
-    print("📝 PREPARING HUMAN BLIND REVIEW DATA")
+    print("PREPARING HUMAN BLIND REVIEW DATA")
     print("="*60)
     
     review_data = []
@@ -1057,10 +1056,11 @@ def run_blind_review_generation():
         review_data.append(entry)
         
         print(f"\nScenario: {case['name']}")
-        print(f"🔴 Base: {base_results[case['id']]}")
-        print(f"🟢 Ours: {ours_results[case['id']]}")
+        print(f"Base: {base_results[case['id']]}")
+        print(f"Ours: {ours_results[case['id']]}")
 
     save_to_jsonl(review_data, "appendix_blind_review_results.jsonl")
 
 if __name__ == "__main__":
+
     run_blind_review_generation()
