@@ -42,14 +42,15 @@ class TemporalPreferenceDataset(Dataset):
         else:
             ada_tau = self.config.tau
         return {
-            'input_ids': sample.context_ids,  # 用于可视化
-            'labels_w': torch.cat([sample.context_ids, sample.chosen_reply_ids], dim=-1), # input
-            'labels_l': torch.cat([sample.context_ids, sample.rejected_reply_ids], dim=-1), # input
-            'masks_w': label_w, # [新增] 真正的 label，带 -100 mask
-            'masks_l': label_l, # [新增] 真正的 label，带 -100 mask
+            'input_ids': sample.context_ids,
+            'labels_w': torch.cat([sample.context_ids, sample.chosen_reply_ids], dim=-1),
+            'labels_l': torch.cat([sample.context_ids, sample.rejected_reply_ids], dim=-1),
+            'masks_w': label_w,
+            'masks_l': label_l,
             'turn_boundaries_w': chosen_boundaries,
             'turn_boundaries_l': rejected_boundaries,
             'turn_id': sample.turn_id,
             'total_turns': sample.total_turns,
-            'adaptive_tau': float(ada_tau) # [新增] 返回 tau
+            'adaptive_tau': float(ada_tau)
+
         }
