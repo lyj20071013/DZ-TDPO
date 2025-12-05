@@ -1,4 +1,3 @@
-# benchmarks/eval_ppl.py
 import argparse
 import os
 import sys
@@ -113,4 +112,5 @@ def main():
     print("="*30)
 
 if __name__ == "__main__":
+
     main()
