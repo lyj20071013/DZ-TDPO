@@ -52,13 +52,13 @@ def main():
     args = parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    print("🔄 Loading Tokenizer...")
+    print("Loading Tokenizer...")
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, trust_remote_code=True)
     if tokenizer.pad_token is None: tokenizer.pad_token = tokenizer.eos_token
 
     tokenizer.add_special_tokens({'additional_special_tokens': ["<|user|>", "<|assistant|>", "<|end|>"]})
 
-    print(f"🔄 Loading Data from {args.data_dir}...")
+    print(f"Loading Data from {args.data_dir}...")
 
     val_container = msc_to_temporal_preference(
         tokenizer, 
@@ -83,7 +83,7 @@ def main():
 
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, collate_fn=collate_fn)
 
-    print("\n🔵 Evaluating Base Model PPL...")
+    print("\nEvaluating Base Model PPL...")
     base_model = AutoModelForCausalLM.from_pretrained(
         args.model_name_or_path, torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto"
     )
@@ -92,7 +92,7 @@ def main():
     del base_model
     torch.cuda.empty_cache()
 
-    print(f"\n🟢 Evaluating Checkpoint: {args.ckpt_path}")
+    print(f"\nEvaluating Checkpoint: {args.ckpt_path}")
     config = TDPODKLConfig(model_name=args.model_name_or_path, use_temporal_bias=args.use_temporal_bias)
     
     base_for_ours = AutoModelForCausalLM.from_pretrained(
@@ -114,3 +114,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
