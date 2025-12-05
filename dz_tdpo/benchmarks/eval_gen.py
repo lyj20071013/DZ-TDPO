@@ -47,7 +47,7 @@ def evaluate_model(model, tokenizer, dataloader, device, metrics_dict):
     total_nll = 0
     total_tokens = 0
     
-    print("🚀 Starting Evaluation loop...")
+    print("Starting Evaluation loop...")
     
     for batch in tqdm(dataloader, desc="Eval"):
         input_ids = batch['input_ids'].to(device)
@@ -87,13 +87,13 @@ def evaluate_model(model, tokenizer, dataloader, device, metrics_dict):
             references.append(ref_text)
             f1_scores.append(compute_f1_token(pred_text, ref_text))
 
-    print("📊 Computing Metrics...")
+    print("Computing Metrics...")
     
     refs_list = [[r] for r in references]
     res_bleu = metrics_dict['bleu'].compute(predictions=predictions, references=refs_list)
     res_rouge = metrics_dict['rouge'].compute(predictions=predictions, references=references)
     
-    print("⏳ Computing BERTScore (DistilBERT)...")
+    print("Computing BERTScore (DistilBERT)...")
     res_bert = metrics_dict['bert'].compute(predictions=predictions, references=references, lang="en", model_type="distilbert-base-uncased")
     
     return {
@@ -108,7 +108,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device: {device}")
 
-    print("📥 Loading Evaluate metrics...")
+    print("Loading Evaluate metrics...")
     metrics_dict = {
         'bleu': evaluate.load("sacrebleu"),
         'rouge': evaluate.load("rouge"),
@@ -120,7 +120,7 @@ def main():
     tokenizer.padding_side = "left"
     tokenizer.add_special_tokens({'additional_special_tokens': ["<|user|>", "<|assistant|>", "<|end|>"]})
 
-    print(f"📦 Loading MSC Validation Data (N={args.num_samples})...")
+    print(f"Loading MSC Validation Data (N={args.num_samples})...")
 
     val_container = msc_to_temporal_preference(tokenizer, data_dir=args.data_dir, split="validation", sessions_per_sample=4)
 
@@ -148,7 +148,7 @@ def main():
 
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, collate_fn=gen_collate_fn)
 
-    print("🧠 Loading Model...")
+    print("Loading Model...")
     base_model = AutoModelForCausalLM.from_pretrained(
         args.model_name_or_path, torch_dtype=torch.bfloat16, device_map="auto", trust_remote_code=True
     )
@@ -162,7 +162,7 @@ def main():
     res = evaluate_model(model, tokenizer, val_loader, device, metrics_dict)
 
     print("\n" + "="*60)
-    print(f"🏆 Results (N={args.num_samples})")
+    print(f"Results (N={args.num_samples})")
     print("-" * 60)
     for k, v in res.items():
         print(f"{k:<10} | {v:.4f}")
@@ -171,3 +171,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
