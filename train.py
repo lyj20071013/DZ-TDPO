@@ -76,7 +76,7 @@ def main():
         ).to(device)
 
         if num_added_toks > 0:
-            print(f"⚠️ Resizing model embeddings to {len(tokenizer)}")
+            print(f"Resizing model embeddings to {len(tokenizer)}")
             base_model.resize_token_embeddings(len(tokenizer))
             ref_base.resize_token_embeddings(len(tokenizer))
 
@@ -130,3 +130,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
