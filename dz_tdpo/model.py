@@ -95,7 +95,7 @@ class TemporalCausalLM(nn.Module):
             
             if attention_mask.dim() == 2:
                 extended_mask = (1.0 - attention_mask) * torch.finfo(self.model_dtype).min
-                extended_mask = extended_mask.unsqueeze(1).unsqueeze(1) # [B, 1, 1, L]
+                extended_mask = extended_mask.unsqueeze(1).unsqueeze(1)
             else:
                 extended_mask = attention_mask
             final_attention_mask = extended_mask + temporal_bias
@@ -120,7 +120,7 @@ class TemporalCausalLM(nn.Module):
             )
 
             temporal_bias = temporal_bias.to(self.model_dtype)
-            kwargs['attention_mask'] = temporal_bias.squeeze(0).to(self.model_dtype)  # 移除batch维度
+            kwargs['attention_mask'] = temporal_bias.squeeze(0).to(self.model_dtype)
         
         with autocast('cuda', enabled=True):
             return self.model.generate(input_ids=input_ids, **kwargs)
