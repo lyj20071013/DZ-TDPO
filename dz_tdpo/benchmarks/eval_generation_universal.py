@@ -52,7 +52,6 @@ class TemporalCausalLM_Gen(nn.Module):
         q_len = input_ids.shape[1] if input_ids is not None else k_len
         min_val = torch.finfo(self.model_dtype).min
         
-        # Extended Mask
         if current_mask.dim() == 2:
             extended_mask = (1.0 - current_mask) * min_val
             extended_mask = extended_mask.to(dtype=self.model_dtype).unsqueeze(1).unsqueeze(1)
@@ -65,7 +64,6 @@ class TemporalCausalLM_Gen(nn.Module):
             causal_mask = causal_mask.masked_fill(~cond, 0.0).unsqueeze(0).unsqueeze(0)
             extended_mask = extended_mask + causal_mask
 
-        # Bias Calculation
         token_turn_ids = torch.zeros(k_len, dtype=torch.long, device=self.device)
         boundaries = self.current_turn_boundaries
         if boundaries:
