@@ -12,7 +12,6 @@ def parse_json_response(content):
     try:
         return json.loads(content)
     except json.JSONDecodeError:
-        # 尝试去除 Markdown 代码块标记
         content = re.sub(r"^```json\s*", "", content)
         content = re.sub(r"^```\s*", "", content)
         content = re.sub(r"\s*```$", "", content)
@@ -183,16 +182,16 @@ def main():
     win_rate = (stats["win"] + 0.5 * stats["tie"]) / valid_total * 100 if valid_total > 0 else 0
 
     print("\n" + "="*40)
-    print(f"📊 DZ-TDPO Evaluation Report")
+    print(f"DZ-TDPO Evaluation Report")
     print(f"Model: {args.model}")
     print(f"Total Samples: {total}")
     print(f"----------------------------------------")
-    print(f"🟢 Wins:   {stats['win']:<5} ({stats['win']/total:.1%})")
-    print(f"⚪ Ties:   {stats['tie']:<5} ({stats['tie']/total:.1%})")
-    print(f"🔴 Losses: {stats['loss']:<5} ({stats['loss']/total:.1%})")
-    print(f"❌ Errors: {stats['error']:<5}")
+    print(f"Wins:   {stats['win']:<5} ({stats['win']/total:.1%})")
+    print(f"Ties:   {stats['tie']:<5} ({stats['tie']/total:.1%})")
+    print(f"Losses: {stats['loss']:<5} ({stats['loss']/total:.1%})")
+    print(f"Errors: {stats['error']:<5}")
     print(f"----------------------------------------")
-    print(f"🏆 Final Win Rate: {win_rate:.2f}%")
+    print(f"Final Win Rate: {win_rate:.2f}%")
     print("="*40)
     print(f"Results saved to: {args.output}")
 
