@@ -17,9 +17,10 @@
 ---
 
 ## 📢 News
-- **[2025/12/15]** **Baseline Repair** For experimental rigor, we fixed Baseline and now test it normally.
-- **[2025/12/12]** 💻 **Code Released!** The full training framework and evaluation benchmarks are now available.
-- **[2025/12/12]** 🚀 **Paper Released!** We have uploaded the paper PDF directly to this repo.
+
+- **[2025/12/5]** 🔥 **Baseline Repair** Evaluation Pipeline Released! Added eval_judge.py (LLM-as-a-Judge) and freeze_data.py.
+- **[2025/12/2]** 💻 **Code Released!** The full training framework and evaluation benchmarks are now available.
+- **[2025/12/2]** 🚀 **Paper Released!** We have uploaded the paper PDF directly to this repo.
 
 ---
 
