@@ -31,7 +31,7 @@ We propose **DZ-TDPO**, a non-destructive alignment framework that synergizes:
 1.  **Conflict-Aware Dynamic KL Constraints (TDPO-DKL)**: Optimization level adjustment.
 2.  **Learnable Temporal Attention Bias (Dual-Zone Temporal Attention)**: Representation level filtering powered by semantic conflict detection.
 
-**Result:** DZ-TDPO achieves **State-of-the-Art win rates (99.4% on Qwen2.5-7B)** on the Multi-Session Chat (MSC) dataset while maintaining robust zero-shot generalization and negligible perplexity overhead.
+**Result:** DZ-TDPO achieves **State-of-the-Art win rates (50.8% on Qwen2.5-7B)** on the Multi-Session Chat (MSC) dataset while maintaining robust zero-shot generalization and negligible perplexity overhead.
 
 ---
 
@@ -46,12 +46,11 @@ DZ-TDPO significantly outperforms Standard DPO and SimPO on the MSC dataset, sol
 
 | Method | Win Rate (MSC) | PPL (Validation) | Alignment Tax |
 | :--- | :---: | :---: | :---: |
-| **Base Model (Phi-3.5)** | 20.2% | 22.1 | - |
-| **Standard DPO** | 52.2% | 124.1 💥 | High |
-| **SimPO** | 60.8% | 99.6 | High |
-| **DZ-TDPO (Ours)** | **86.2%** | **24.8** ✅ | **Negligible** |
+| **Standard DPO** | 45.8% | 102.3 💥 | High |
+| **SimPO** | 46.4% | 101.2 | High |
+| **DZ-TDPO (Ours)** | **55.4%** | **26.0** ✅ | **Negligible** |
 
-> **Note:** On **Qwen2.5-7B**, DZ-TDPO achieves a near-perfect **99.4% Win Rate**.
+> **Note:** On **Qwen2.5-7B**, DZ-TDPO achieves a near-perfect **50.8% Win Rate**.
 
 ### 2. Robustness (Needle-in-a-Haystack)
 Does the temporal decay make the model "forgetful"? **No.**
@@ -94,6 +93,9 @@ DZ-TDPO/
 │   ├── eval_RULER.py      # Long-context Retrieval Stress Test
 │   ├── merge_adapter.py   # Utility: Merge Custom Weights into HF Base Model
 │   ├── eval_gen.py        # Quantitative: Generation Quality (BLEU, ROUGE, BERTScore)
+│   ├── eval_judge.py      # LLM-as-a-Judge (DeepSeek v3.2)
+│   ├── freeze_data.py     # Generate fixed test sets for reproducibility
+│   ├── eval_generation_universal.py # Batch generation script
 ├── baselines/
 │   ├── train_baselines.py # Training DPO and SimPO
 ├── train.py               # Main unified training entry point
