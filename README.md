@@ -213,6 +213,7 @@ python benchmarks/merge_adapter.py \
     --base_model_path microsoft/Phi-3.5-mini-instruct \
     --ckpt_path ./checkpoints/dz_tdpo/final_model.pt \
     --save_path ./merged_model
+```
 
 ### 1. Qualitative Analysis (TAB-60 & PingPong)
 *   **TAB-60**: Evaluates the model on 60 adversarial scenarios (e.g., rapid preference toggling, role reversal).
